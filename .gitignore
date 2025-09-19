@@ -1,3 +1,5 @@
 /.venv
+
 /main.py
+
 /.env
