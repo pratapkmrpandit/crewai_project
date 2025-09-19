@@ -17,9 +17,11 @@ def load_agents(agent_yaml: str):
             role=a["role"],
             goal=a["goal"],
             backstory=a["backstory"],
-            verbose=a.get("verbose", False)
+            verbose=a.get("verbose", False),
+            llm="gemini/gemini-2.0-flash"   # ✅ correct LiteLLM syntax
         )
     return agents
+
 
 def load_tasks(task_yaml: str, agents: dict, city: str = "", famous_things: str = ""):
     data = load_yaml(task_yaml)
@@ -41,23 +43,29 @@ def main():
     # Load agents
     agents = load_agents("config/agents.yaml")
 
-    # First task: Gemini picks random city
+    # First: run city task via a temporary Crew
     city_task = Task(
         description="Choose a random city in India. Only return the city name.",
         expected_output="A single city name in India.",
         agent=agents["city_agent"]
     )
 
-    # Run city task separately
-    city_result = city_task.execute()
-    city = city_result.strip()
+    city_crew = Crew(
+        agents=[agents["city_agent"]],
+        tasks=[city_task],
+        process=Process.sequential,
+        verbose=True
+    )
+
+    city_result = city_crew.kickoff()
+    city = city_result.raw.strip()
     print(f"Gemini chose city: {city}")
 
     # Load famous + explanation tasks dynamically
     tasks = load_tasks("config/tasks.yaml", agents, city, "the two famous things")
     tasks = [tasks[1], tasks[2]]  # skip city_task since we already executed it
 
-    # Create crew
+    # Now run the full crew
     crew = Crew(
         agents=list(agents.values()),
         tasks=tasks,
