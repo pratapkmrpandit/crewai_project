@@ -23,7 +23,7 @@ class CityInfoFlow(Flow):
         for a in data["agents"]:
             tools = []
             if a["name"] == "famous_agent" or a["name"] == "explanation_agent":
-                tools = [self.search_tool]  # attach Serper
+                tools = [self.search_tool]  # attach SerperDevTool
             agents[a["name"]] = Agent(
                 role=a["role"],
                 goal=a["goal"],
@@ -67,7 +67,7 @@ class CityInfoFlow(Flow):
         )
         result = crew.kickoff()
         city = result.raw.strip()
-        print(f"\n🌆 Gemini chose city: {city}")
+        print(f"\nGemini chose city: {city}")
         return city
 
     @listen(pick_city)
@@ -108,5 +108,5 @@ class CityInfoFlow(Flow):
 if __name__ == "__main__":
     flow = CityInfoFlow()
     output = flow.kickoff()
-    print("\n=== Final Output ===")
+    print("\nFinal Output\n ")
     print(output)
