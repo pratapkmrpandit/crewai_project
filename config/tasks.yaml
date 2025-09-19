@@ -1,0 +1,19 @@
+tasks:
+  - name: city_task
+    description: >
+      Choose a random city in India. Do not always return the same city. 
+      Only return the city name, nothing else.
+    expected_output: A single city name in India.
+    agent: city_agent
+
+  - name: famous_task
+    description: >
+      Find two famous things (monuments, foods, cultural aspects, or festivals) about {{city}}.
+    expected_output: A list of two famous things from the city.
+    agent: famous_agent
+
+  - name: explanation_task
+    description: >
+      Write 5-line explanations about {{famous_things}} from {{city}}.
+    expected_output: Two paragraphs, each 5 lines explaining the famous thing.
+    agent: explanation_agent
