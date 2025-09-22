@@ -100,7 +100,7 @@ class CityInfoFlow(Flow):
             verbose=True
         )
         result = crew.kickoff()
-        print("\n📝 Explanations:")
+        print("\nExplanations:")
         print(result)
         return result
 
